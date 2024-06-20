@@ -328,14 +328,14 @@ if (is_updates_test_repo && !get_var('MAINT_TEST_REPO')) {
     my %incidents;
     $incidents{OS} = get_var('OS_TEST_REPOS', '');
 
-    my @addons = split(/,/, get_var('SCC_ADDONS', ''));
+    my @addons = split(/,/, get_var('MRU_ADDONS', ''));
 
     for my $i (split(/,/, get_var('ADDONS', '')), split(/,/, get_var('ADDONURL', ''))) {
         push(@addons, $i);
     }
 
     # set SCC_ADDONS before push to slenkins
-    set_var('SCC_ADDONS', join(',', @addons));
+    set_var('MRU_ADDONS', join(',', @addons));
 
     # SLES4SAP and HA do not have addon on SLE12
     # We need to push sles4sap and ha for using _TEST_ISSUES and _TEST_TEMPLATE below

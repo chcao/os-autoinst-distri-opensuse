@@ -1,0 +1,9 @@
+---
+name: autoupgrade
+description: >
+  Performs a migration from installed system with released maintenance updates to mu unreleased testsuites.
+schedule:
+  - autoyast/prepare_profile
+  - migration/version_switch_origin_system
+  - boot/boot_to_desktop
+
