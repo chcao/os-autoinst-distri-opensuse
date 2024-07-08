@@ -2,7 +2,7 @@
 mds:
   - raid_level: 1
     name: md0
-    chunk_size: '4 KiB'
+    chunk_size: '0 KiB'
     devices:
       - vda2
       - vdb2
