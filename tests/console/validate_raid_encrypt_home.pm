@@ -14,15 +14,17 @@ use testapi;
 use Mojo::JSON qw(decode_json);
 use scheduler 'get_test_suite_data';
 use Test::Assert ':all';
+use filesystem_utils qw(is_lsblk_able_to_display_mountpoints);
 
 sub run {
     select_console 'root-console';
     my $md_name = get_test_suite_data()->{mds}[1]{name};
     my $lsblk_output = decode_json(script_output("lsblk -M -J /dev/$md_name"));
+    my $has_mountpoints_col = is_lsblk_able_to_display_mountpoints();
 
     assert_equals($md_name, $lsblk_output->{blockdevices}[0]{name}, "Multi-disk name not found");
     assert_equals('crypt', $lsblk_output->{blockdevices}[0]{children}[0]{type}, "Encrypted type not found");
-    assert_equals('/home', $lsblk_output->{blockdevices}[0]{children}[0]{mountpoints}[0], "Encrypted mount point not found");
+    assert_equals('/home', $lsblk_output->{blockdevices}[0]{children}[0]{$has_mountpoints_col}, "Encrypted mount point not found");
 }
 
 1;
