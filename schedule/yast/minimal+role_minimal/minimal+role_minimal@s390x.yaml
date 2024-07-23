@@ -10,6 +10,8 @@ vars:
 schedule:
   system_role:
     - installation/system_role/select_role_minimal
+  software:
+    - installation/installation_settings/validate_default_target
   system_preparation:
     - console/system_prepare
     - console/consoletest_setup
