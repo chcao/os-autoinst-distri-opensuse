@@ -1,0 +1,75 @@
+{
+  "user": {
+    "fullName": "Bernhard",
+    "userName": "bernhard",
+    "password": "nots3cr3t"
+  },
+  "root": {
+    "sshPublicKey": "",
+    "password": "nots3cr3t"
+  },
+  "software": {
+    "patterns": []
+  },
+  "product": {
+    "id": "Tumbleweed",
+    "registrationCode": "",
+    "registrationEmail": ""
+  },
+  "storage": {
+    "guided": {
+      "target": {
+        "disk": "/dev/vda"
+      },
+      "boot": {
+        "configure": true
+      },
+      "space": {
+        "policy": "delete"
+      },
+      "volumes": [
+        {
+          "mount": {
+            "path": "/",
+            "options": [
+
+            ]
+          },
+          "size": "auto",
+          "target": "default",
+          "filesystem": {
+            "btrfs": {
+              "snapshots": true
+            }
+          }
+        },
+        {
+          "mount": {
+            "path": "swap",
+            "options": [
+
+            ]
+          },
+          "size": "auto",
+          "target": "default",
+          "filesystem": "swap"
+        }
+      ]
+    }
+  },
+  "network": {
+    "connections": [
+      {
+        "id": "Wired connection 1",
+        "method4": "auto",
+        "method6": "auto",
+        "interface": "enp1s0"
+      }
+    ]
+  },
+  "localization": {
+    "language": "en_US.UTF-8",
+    "keyboard": "us",
+    "timezone": "Europe/Berlin"
+  }
+}
