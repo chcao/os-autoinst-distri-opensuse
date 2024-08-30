@@ -2477,7 +2477,7 @@ sub install_patterns {
             next;
         }
         # skip the installation of Amazon-Web-Service due to bsc#1202478
-        if (($pt =~ /Amazon-Web-Service/) && is_aarch64) {
+        if (($pt =~ /Amazon-Web-Services/) && is_aarch64) {
             record_soft_failure('bsc#1202478 - skip pattern Amazon-Web-Service');
             next;
         }
@@ -2489,6 +2489,7 @@ sub install_patterns {
         next if (($pt =~ /common-criteria/) && check_var('PATTERNS', 'all'));
         # if pattern is fips or fips-certified and PATTERNS is all, skip
         next if (($pt =~ /fips|fips-certified/) && check_var('PATTERNS', 'all'));
+	next if (($pt =~ /Amazon-Web-Services/) && check_var('PATTERNS', 'all'));
         # if pattern is x11_raspberrypi and PATTERNS is all for aarch64, skip
         next if (($pt =~ /x11_raspberrypi/) && check_var('PATTERNS', 'all') && is_aarch64);
         zypper_call("in -t pattern $pt", timeout => 1800);
