@@ -12,6 +12,7 @@ use base "consoletest";
 use testapi;
 use Utils::Architectures;
 use utils;
+use Utils::Backends;
 use power_action_utils 'power_action';
 use strict;
 use warnings;
@@ -21,6 +22,9 @@ sub run {
     power_action('reboot', textmode => 1);
     if (is_aarch64) {
         $self->wait_boot(bootloader_time => 300);
+    }
+    if (is_pvm()) {
+        reconnect_mgmt_console(timeout => 500);
     }
     else {
         $self->wait_boot;
