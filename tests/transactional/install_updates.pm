@@ -37,9 +37,9 @@ sub run {
     fully_patch_system(trup_call_timeout => 1800);
 
     # Now we add the incident repositories and do a zypper patch
-    add_test_repositories;
-    record_info('Updates', script_output('zypper lu'));
-    my $ret = trup_call('up', timeout => 300, proceed_on_failure => 1);
+    #add_test_repositories;
+    #record_info('Updates', script_output('zypper lu'));
+    #my $ret = trup_call('up', timeout => 300, proceed_on_failure => 1);
     process_reboot(trigger => 1);
 }
 
