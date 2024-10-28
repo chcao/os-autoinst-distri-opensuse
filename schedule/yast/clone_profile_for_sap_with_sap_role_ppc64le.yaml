@@ -1,0 +1,27 @@
+---
+name:          create_hdd_sap_role
+schedule:
+  - installation/bootloader
+  - installation/welcome
+  - installation/scc_registration
+  - installation/addon_products_sle
+  - installation/system_role
+  - installation/sles4sap_product_installation_mode
+  - installation/partitioning
+  - installation/partitioning_finish
+  - installation/installer_timezone
+  - installation/user_settings_root
+  - installation/resolve_dependency_issues
+  - installation/installation_overview
+  - installation/disable_grub_timeout
+  - installation/start_install
+  - installation/await_install
+  - installation/reboot_after_installation
+  - installation/handle_reboot
+  - installation/first_boot
+  - console/system_prepare
+  - autoyast/console
+  - autoyast/repos
+  - autoyast/clone
+  - console/zypper_lr
+  - console/zypper_ref
