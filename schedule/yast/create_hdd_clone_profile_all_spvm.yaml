@@ -1,0 +1,42 @@
+---
+name:          create_hdd_gnome
+schedule:
+  - installation/bootloader_start
+  - installation/welcome
+  - installation/scc_registration
+  - installation/addon_products_sle
+  - installation/system_role
+  - installation/partitioning
+  - installation/partitioning/no_separate_home
+  - installation/partitioning_finish
+  - installation/installer_timezone
+  - installation/user_settings
+  - installation/user_settings_root
+  - installation/installation_overview
+  - installation/disable_grub_timeout
+  - installation/start_install
+  - installation/await_install
+  - installation/logs_from_installation_system
+  - installation/reboot_after_installation
+  - '{{handle_reboot}}'
+  - installation/first_boot
+  - console/hostname
+  - console/system_prepare
+  - yam/migration/check_patterns
+  - autoyast/console
+  - autoyast/repos
+  - autoyast/clone
+  - console/zypper_lr
+  - console/zypper_ref
+
+conditional_schedule:
+  handle_reboot:
+    ARCH:
+      ppc64le:
+        - installation/handle_reboot
+      s390x:
+        - installation/handle_reboot
+      x86_64:
+        - installation/grub_test
+      aarch64:
+        - installation/grub_test
