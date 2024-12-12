@@ -1,0 +1,10 @@
+---
+name: agama installation with gnome pattern
+description: >
+  Perform installation with gnome pattern.
+schedule:
+  - yam/agama/boot_agama
+  - yam/agama/import_agama_profile
+  - yam/agama/patch_agama_tests
+  - yam/agama/agama
+  - installation/first_boot
