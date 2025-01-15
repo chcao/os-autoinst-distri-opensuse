@@ -53,7 +53,7 @@ sub run {
     set_scc_proxy_url;
 
     # import gpg key
-    script_run("rpm --import /usr/lib/rpm/gnupg/keys/gpg-pubkey-*.asc");
+    script_run("zypper -n --gpg-auto-import-keys refresh");
     # according to comment 19 of bsc#985647, uninstall all kgraft-patch* packages prior to migration as a workaround to
     # solve conflict during online migration with live patching addon
     remove_kgraft_patch if is_sle('<15');
