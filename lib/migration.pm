@@ -125,7 +125,8 @@ sub deregister_dropped_modules {
             }
         }
         else {
-            remove_suseconnect_product(get_addon_fullname($name));
+            deregister_addons_cmd;
+            #remove_suseconnect_product(get_addon_fullname($name));
         }
         # remove item from addons
         @all_addons = grep { $_ ne $name } @all_addons;
