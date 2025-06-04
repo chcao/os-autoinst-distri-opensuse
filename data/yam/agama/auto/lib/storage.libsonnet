@@ -68,10 +68,98 @@ local whole_disk_and_boot_unattended() = {
     device: 'boot-disk',
   },
 };
+local raid() = {
+  "drives": [
+    {
+      "partitions": [
+        {
+          "delete": true,
+          "search": "*"
+        },
+        {
+          "id": "esp",
+          "size": "128 MiB",
+          "filesystem": {
+            "path": "/boot/efi",
+            "type": "vfat"
+          },
+        },
+        {
+          "alias": "mdroot",
+          "id": "raid",
+          "size": "7.81 GiB"
+        },
+        {
+          "alias": "mdswap",
+          "id": "raid",
+          "size": "512 MiB"
+        },
+      ],
+    },
+    {
+      "search": "*",
+      "partitions": [
+        {
+          "delete": true,
+          "search": "*"
+        },
+        {
+          "id": "esp",
+          "size": "128 MiB",
+          "filesystem": { "type": "vfat" }
+        },
+        {
+          "alias": "mdroot",
+          "id": "raid",
+          "size": "7.81 GiB"
+        },
+        {
+          "alias": "mdswap",
+          "id": "raid",
+          "size": "512 MiB"
+        },
+      ],
+    },
+  ],
+  "mdRaids": [
+    {
+      "devices": [
+        "mdroot"
+      ],
+      "level": "raid0",
+      "partitions": [
+        {
+          "filesystem": {
+            "path": "/",
+            "type": {
+              "btrfs": {
+                "snapshots": false
+              },
+            },
+          },
+        },
+      ],
+    },
+    {
+      "devices": [
+        "mdswap"
+      ],
+      "level": "raid0",
+      "partitions": [
+        {
+          "filesystem": {
+            "path": "swap"
+          },
+        },
+      ],
+    },
+  ],
+};
 {
   lvm: lvm(false),
   lvm_encrypted: lvm(true),
   lvm_tpm_fde: lvm(true, 'tpmFde'),
+  raid: raid(),
   root_filesystem_ext4: root_filesystem('ext4'),
   root_filesystem_xfs: root_filesystem('xfs'),
   whole_disk_and_boot_unattended: whole_disk_and_boot_unattended(),
