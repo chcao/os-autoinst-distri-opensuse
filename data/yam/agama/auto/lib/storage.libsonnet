@@ -10,7 +10,7 @@ local root_filesystem(filesystem) = {
   ],
 };
 
-local lvm(encrypted=false, encryption='luks2') = {
+local lvm(encrypted=false, encryption='luks2', dasd=false) = {
   drives: [
     {
       alias: 'pvs-disk',
@@ -38,6 +38,20 @@ local lvm(encrypted=false, encryption='luks2') = {
       ],
     },
   ],
+  dasd: if dasd then {
+    devices: [
+      {
+        channel: "0.0.0200",
+        format: true,
+        diag: true,
+        state: "active",
+      },
+      {
+        channel: "0.0.0201",
+        state: "offline",
+      },
+    ]
+  } else null,
 };
 
 local whole_disk_and_boot_unattended() = {
@@ -158,6 +172,7 @@ local raid(level='raid0', uefi=false) = {
 };
 {
   lvm: lvm(false),
+  lvm_dasd: lvm(dasd=true),
   lvm_encrypted: lvm(true),
   lvm_tpm_fde: lvm(true, 'tpmFde'),
   raid0: raid('raid0'),
