@@ -5,9 +5,11 @@ local scripts_post_lib = import 'lib/scripts_post.libsonnet';
 local scripts_post_partitioning_lib = import 'lib/scripts_post_partitioning.libsonnet';
 local scripts_pre_lib = import 'lib/scripts_pre.libsonnet';
 local storage_lib = import 'lib/storage.libsonnet';
+local extra_repositories_lib = import 'lib/extra_repositories.libsonnet';
 local security_lib = import 'lib/security.libsonnet';
 
 function(bootloader=false,
+         extraRepositories=false,
          dasd=false,
          files=false,
          localization='',
@@ -27,9 +29,10 @@ function(bootloader=false,
   [if dasd == true then 'dasd']: dasd_lib.dasd(),
   [if files == true then 'files']: base_lib['files'],
   [if localization == true then 'localization']: base_lib['localization'],
-  [if patterns != '' || packages != '' then 'software']: std.prune({
+  [if patterns != '' || packages != '' || extraRepositories == true then 'software']: std.prune({
     patterns: if patterns != '' then std.split(patterns, ','),
     packages: if packages != '' then std.split(packages, ','),
+    extraRepositories: if extraRepositories == true then extra_repositories_lib.extraRepositories(),
   }),
   [if product != '' then 'product']: {
     [if registration_code_ha != '' then 'addons']: std.prune([
