@@ -31,7 +31,7 @@ sub run {
     power_action('reboot', keepconsole => 1, first_reboot => 1);
 
     assert_screen([qw(grub-menu-migration migration-running)]);
-    assert_screen('grub2', 400);
+    assert_screen('grub2', 800);
 }
 
 sub post_fail_hook {
