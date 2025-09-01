@@ -28,9 +28,16 @@ sub run {
     # install the migration image and active it
     zypper_call("--gpg-auto-import-keys -n in suse-migration-sle16-activation");
 
+    # add timeout for migration grub menu
+    assert_script_run("sed -i 's/GRUB_TIMEOUT=.*\$/GRUB_TIMEOUT=15/' /etc/default/grub");
+    assert_script_run("cat /etc/default/grub");
+
+    assert_script_run("grub2-mkconfig -o /boot/grub2/grub.cfg");
+
     power_action('reboot', keepconsole => 1, first_reboot => 1);
 
-    assert_screen([qw(grub-menu-migration migration-running)]);
+    assert_screen('grub-menu-migration');
+    assert_screen('migration-running');
     assert_screen('grub2', 400);
 }
 
