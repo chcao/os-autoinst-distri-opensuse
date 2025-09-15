@@ -34,7 +34,8 @@ sub run {
     script_run('for s in $(zypper -t ls | grep _Module_' . "$version" . ' | sed -e \'s,|.*,,g\'); do zypper modifyservice --disable $s; done');
     power_action('reboot', textmode => 1, keepconsole => 1, first_reboot => 1);
 
-    assert_screen([qw(grub-menu-migration migration-running)], 150);
+    assert_screen('grub-menu-migration', 150);
+    assert_screen('migration-running');
     assert_screen('grub2', 400);
 }
 
