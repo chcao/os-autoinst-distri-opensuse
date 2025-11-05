@@ -30,6 +30,7 @@ use registration qw(add_suseconnect_product get_addon_fullname is_phub_ready);
 sub run {
     my $self = shift;
     select_serial_terminal;
+    add_suseconnect_product(get_addon_fullname('phub')) if (is_phub_ready() && is_sle('>=16.1'));
 
     # Package 'salt-minion' requires PackageHub is available
     add_suseconnect_product(get_addon_fullname('phub')) if (is_phub_ready() && is_sle('>=16.0'));
