@@ -19,7 +19,7 @@ sub run {
     select_console('root-console');
 
     # Add repo for devel:DMS when using proxy
-    if ((get_var('SCC_URL', "") =~ /proxy/)) {
+    if ((get_var('SCC_URL', "") =~ /proxy/) || (get_var('FLAVOR') eq 'agama-installer')) {
         my $repo_server = "https://download.opensuse.org/repositories/devel:/DMS/";
         my $repo_url = $repo_server . "SLE_" . (get_var('VERSION_UPGRADE_FROM') =~ s/-/_/gr);
         zypper_call("ar --refresh -p 90 '$repo_url' Migration");
@@ -40,6 +40,11 @@ sub run {
 
     # clean migration repo and configure SUSEConnect when using proxy
     if ((get_var('SCC_URL', "") =~ /proxy/)) {
+        # disable repos of the product to migrate from due to proxySCC is not serving SLES 15 SP*
+        my $version = get_var('VERSION_UPGRADE_FROM');
+        $version =~ s/-/_/;
+        script_run('for s in $(zypper -t ls | grep ' . "$version" . ' | sed -e \'s,|.*,,g\'); do zypper modifyservice --disable $s; done');
+
         zypper_call("rr Migration");
         assert_script_run("echo 'url: " . get_var('SCC_URL') . "' > /etc/SUSEConnect");
     }

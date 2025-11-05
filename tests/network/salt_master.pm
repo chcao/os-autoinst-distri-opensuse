@@ -42,8 +42,9 @@ sub run {
     select_serial_terminal;
 
     # Package 'salt-master' requires PackageHub is available
-    add_suseconnect_product(get_addon_fullname('phub')) if (is_phub_ready() && is_sle('>=16.0'));
 
+    add_suseconnect_product(get_addon_fullname('phub')) if (is_phub_ready() && is_sle('>=16.0'));
+    
     # Install, configure and start the salt master
     $self->master_prepare();
 
