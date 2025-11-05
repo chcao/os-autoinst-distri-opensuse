@@ -37,12 +37,6 @@ sub run {
     }
     diag "SUSEConnect --status-text: $out";
     assert_script_run "SUSEConnect --status-text | grep -v 'Not Registered'" unless get_var('MEDIA_UPGRADE');
-    
-    script_run('SUSEConnect -d');
-    script_run('SUSEConnect --cleanup');
-    assert_script_run "SUSEConnect -p SLES/15.7/s390x -r " . get_var('SCC_REGCODE') . " --url " . get_var('RMT_URL'), 180;
-    script_run('SUSEConnect --status-text');
-    script_run('zypper lr -u');
 
     # enable multiversion for kernel-default based on bsc#1097111, for migration continuous cases only
     if (get_var('FLAVOR', '') =~ /Continuous-Migration/) {
