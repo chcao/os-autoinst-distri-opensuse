@@ -44,7 +44,7 @@ sub run {
       " --test-reporter-destination=/tmp/$tap" .
       " /usr/share/agama/system-tests/${test}.js" .
       " --product-version " . get_required_var('VERSION') .
-      " --agama-version " . get_required_var('AGAMA_VERSION') .
+      " --agama-version " . get_var('AGAMA_VERSION', '') .
       " $test_options";
 
     record_info("node cmd", $node_cmd);
