@@ -426,7 +426,7 @@ sub prepare_source_repo {
         }
         # SLE maintenance tests are assumed to be SCC registered
         # and source repositories disabled by default
-        elsif (main_common::is_updates_tests) {
+        elsif (main_common::is_updates_tests || get_var('ENABLE_SOURCE')) {
             zypper_call(q{mr -e $(zypper -n lr | awk '/-Source/ {print $1}')});
         }
         elsif (is_sle('>=16') and get_var("REPO_SLES_16_SOURCE")) {
@@ -470,7 +470,7 @@ Disable source repositories
 =cut
 
 sub disable_source_repo {
-    if (is_sle && get_var('FLAVOR') =~ /-Updates$|-Incidents$/) {
+    if (is_sle && (get_var('FLAVOR') =~ /-Updates$|-Incidents$/ || get_var('ENABLE_SOURCE'))) {
         zypper_call(q{mr -d $(zypper -n lr | awk '/-Source/ {print $1}')});
     }
     elsif (script_run('zypper lr repo-source') == 0) {
