@@ -27,10 +27,8 @@ sub run {
     select_serial_terminal;
 
     zypper_call("-v in mutt wget postfix", exitcode => [0, 102, 103], timeout => 1000);
-
+    # debug for postfix.service
     assert_script_run 'systemctl status postfix.service';
-
-    assert_script_run 'systemctl start postfix.service';
 
     # Mutt is Mutt (bsc#1094717) and has build in support for IMAP and SMTP
     validate_script_output 'mutt -v', sub { m/\+USE_IMAP/ && m/\+USE_SMTP/ && not m/NeoMutt/ };
@@ -60,7 +58,7 @@ sub run {
     assert_screen 'mutt-show-mail';
 
     record_info 'reply', 'Send a reply to the mail';
-    enter_cmd "rOHello,\nthanks for the message.\n:x";
+    enter_cmd "rOHello,\nthanks for the message.\n␛:x";
     assert_screen 'mutt-send-reply';
     type_string "y";
     assert_screen 'mutt-message-sent';
