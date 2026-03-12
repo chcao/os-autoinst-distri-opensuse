@@ -23,7 +23,7 @@
 use base "consoletest";
 use testapi;
 use serial_terminal 'select_serial_terminal';
-use utils 'zypper_call';
+use package_utils 'install_package';
 use File::Basename 'basename';
 
 sub run {
@@ -39,7 +39,7 @@ sub run {
     assert_script_run("curl -o ${dir_prefix}openqa_test_rpm_pub.asc " . autoinst_url . "/data/rpm/openqa_test_rpm_pub.asc");
     assert_script_run('rpm --import ' . $dir_prefix . 'openqa_test_rpm_pub.asc');
     # Pull and store aaa_base in zypper's cache
-    zypper_call 'in -fy --download-only aaa_base';
+    install_package('-fy --download-only aaa_base', trup_reboot => 1);
     assert_script_run "mv `find /var/cache/zypp/packages/ | grep aaa_base | head -n1` ${dir_prefix}aaa_base.rpm";
     # List all packages
     assert_script_run 'rpm -qa';

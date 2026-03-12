@@ -11,6 +11,7 @@ package services::rpcbind;
 use base 'opensusebasetest';
 use testapi;
 use utils;
+use package_utils 'install_package';
 use strict;
 use warnings;
 
@@ -19,8 +20,7 @@ my $nfs_server = 'nfs-server';
 
 sub install_service {
     # rpcbind needs nfs-server for testing.
-    zypper_call('in rpcbind');
-    zypper_call('in nfs-kernel-server');
+    install_package('rpcbind nfs-kernel-server', trup_reboot => 1) if (script_run('rpm -q rpcbind nfs-kernel-server'));
 }
 
 sub check_install {

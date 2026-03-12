@@ -14,6 +14,7 @@ use testapi;
 use serial_terminal 'select_serial_terminal';
 use utils;
 use version_utils;
+use package_utils 'install_package';
 
 sub run {
     select_serial_terminal;
@@ -21,7 +22,7 @@ sub run {
     assert_script_run 'ip a';
 
     if (is_opensuse) {
-        zypper_call 'in systemd-networkd';
+        install_package 'systemd-networkd';
         systemctl 'is-enabled systemd-networkd', expect_false => 1;
         systemctl 'is-active systemd-networkd', expect_false => 1;
         script_run 'networkctl status';

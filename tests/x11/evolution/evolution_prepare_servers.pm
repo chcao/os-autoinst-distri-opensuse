@@ -18,6 +18,7 @@ use base "opensusebasetest";
 use testapi;
 use serial_terminal 'select_serial_terminal';
 use utils;
+use package_utils 'install_package';
 use version_utils qw(is_sle is_jeos is_opensuse is_public_cloud is_leap);
 
 sub run() {
@@ -32,7 +33,7 @@ sub run() {
         zypper_call("ar -f http://dist.suse.de/ibs/SUSE/Products/SLE-Module-Server-Applications/$version/x86_64/product/ sle-module-server-applications:${version}::update");
 
         zypper_call("--gpg-auto-import-keys ref");
-        zypper_call("in dovecot 'openssl(cli)'", exitcode => [0, 102, 103]);
+        install_package("dovecot 'openssl(cli)'", exitcode => [0, 102, 103]);
         zypper_call("rr sle-module-server-applications:${version}::pool sle-module-server-applications:${version}::update");
     } else {
         if (is_opensuse) {
@@ -40,7 +41,7 @@ sub run() {
             zypper_call("in --force-resolution postfix", exitcode => [0, 102, 103]);
             systemctl 'start postfix';
         }
-        zypper_call("in dovecot 'openssl(cli)' postfix", exitcode => [0, 102, 103]);
+        install_package("dovecot 'openssl(cli)' postfix", exitcode => [0, 102, 103], trup_reboot => 1);
         zypper_call("in --force-resolution postfix", exitcode => [0, 102, 103]) if is_jeos;
     }
 

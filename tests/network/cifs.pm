@@ -26,7 +26,7 @@ sub setup_local_server() {
     # Setup a local samba server with "currywurst" and "filedrop" shares
     my $pkgs = "samba";
     $pkgs .= " policycoreutils-python-utils" if has_selinux;
-    zypper_call("in $pkgs");
+    install_package("$pkgs", trup_reboot => 1);
     assert_script_run("useradd geekotest");
     # The custom path needs to be explicitly allowed
     assert_script_run('semanage fcontext -a -t samba_share_t "/srv/samba(/.*)"') if has_selinux;
@@ -56,7 +56,7 @@ sub run {
     my $is_local = $smb_remote eq 'local';
     my $pkgs = "cifs-utils samba-client";
     $pkgs .= " nmap" unless $is_local;
-    my $ret = zypper_call "in $pkgs";
+    my $ret = install_package("$pkgs");
     if ($is_local || script_run("nmap -p 139,445 $smb_remote | grep open") != 0) {
         my $reason = $is_local ? "defined by CIFS_TEST_REMOTE" : "$smb_remote unreachable";
         record_info("local samba server", "Using a local samba server ($reason)");
