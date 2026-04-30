@@ -1,0 +1,16 @@
+---
+name: agama_migration_leap_s390x
+description: >
+  Migration from openSUSE Leap using zypper migration
+schedule:
+  - yam/agama/boot_agama
+  - yam/agama/patch_agama_tests
+  - yam/agama/agama
+  - boot/reconnect_mgmt_console
+  - installation/first_boot
+  - console/system_prepare
+  - yam/migration/zypper_migration
+  - yam/validate/validate_migration_logs
+  - yam/validate/validate_product
+  - yam/validate/validate_registered_products
+  - console/validate_repos

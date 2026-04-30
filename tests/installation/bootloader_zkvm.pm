@@ -28,7 +28,7 @@ sub set_svirt_domain_elements {
 
     if (!get_var('BOOT_HDD_IMAGE') or (get_var('PATCHED_SYSTEM') and !get_var('ZDUP'))) {
         my $repo = "$utils::OPENQA_HTTP_URL/" . get_required_var('REPO_0');
-        $repo = get_var('MIRROR_HTTP') if get_var('NTLM_AUTH_INSTALL');
+        $repo = get_var('MIRROR_HTTP') if (get_var('NTLM_AUTH_INSTALL') || ((get_var('FLAVOR') = 'Online') && (get_var("ISO") =~ /Leap/)));
         my $name = $svirt->name;
 
         my $ntlm_p = get_var('NTLM_AUTH_INSTALL') ? $ntlm_auth::ntlm_proxy : '';
@@ -66,7 +66,7 @@ sub set_svirt_domain_elements {
 
         # show this on screen and make sure that kernel and initrd are actually saved
         my $boot_path = "$repo/boot/s390x";
-        $boot_path .= "/loader" if (is_sle('16.1+'));
+    #   $boot_path .= "/loader" if (is_sle('16.1+'));
         enter_cmd "wget $boot_path/initrd -O $zkvm_img_path/$name.initrd";
         assert_screen("initrd-saved", timeout => 300);
         enter_cmd "wget $boot_path/linux -O $zkvm_img_path/$name.kernel";

@@ -26,12 +26,22 @@ sub run {
 
     select_console 'root-console';
 
+    # debug
+    assert_script_run("zypper lr -u");
+
     # Register openSUSE Leap against SCC; Leap can not be registered against ProxySCC, it is not available on ProxySCC.
     assert_script_run("SUSEConnect -r " . get_var("SCC_REGCODE"), timeout => 60) if (get_var("ISO") =~ /Leap/);
 
+    # debug
+    assert_script_run("zypper lr -u");
+
     assert_script_run("echo 'url: " . get_required_var('SCC_URL') . "' > /etc/SUSEConnect");
 
-    script_run("(zypper migration; echo $zypper_done) |& tee /dev/$serialdev", 0);
+    my $migration_cmd = (get_var("ISO") =~ /Leap/)
+                    ? "zypper migration --allow-vendor-change"
+                    : "zypper migration";
+
+    script_run("($migration_cmd; echo $zypper_done) |& tee /dev/$serialdev", 0);
 
     my $match = wait_serial($zypper_prompts->{migration_target}, 120)
       || die "Target version $target_version was not found.";
