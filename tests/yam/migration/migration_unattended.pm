@@ -18,6 +18,10 @@ sub run {
 
     select_console('root-console');
 
+    if ((get_var('SCC_URL', "") =~ /proxy/)) {
+        assert_script_run("echo 'url: " . get_var('SCC_URL') . "' > /etc/SUSEConnect");
+    }
+
     # Add repo for devel:DMS when using proxy
     if ((get_var('SCC_URL', "") =~ /proxy/)) {
         my $repo_server = "https://download.opensuse.org/repositories/devel:/DMS/";
@@ -29,7 +33,14 @@ sub run {
     my $migration_tool = is_s390x ? 'SLES16-Migration' : 'suse-migration-sle16-activation';
     zypper_call("--gpg-auto-import-keys -n in $migration_tool");
 
-    # deactivate unwanted/unsupported extensions before doing migration
+    # debug refresh service issue
+    #script_run("zypper removeservice SUSE_Linux_Enterprise_Server_15_SP7_x86_64");
+    #script_run("zypper removeservice Basesystem_Module_15_SP7_x86_64");
+    #script_run("zypper removeservice Python_3_Module_15_SP7_x86_64");
+    #script_run("zypper removeservice Server_Applications_Module_15_SP7_x86_64");
+    #script_run("zypper removeservice Systems_Management_Module_15_SP7_x86_64");
+
+     # deactivate unwanted/unsupported extensions before doing migration
     if (get_var('SCC_SUBTRACTIONS')) {
         foreach my $addon (split(',', get_var('SCC_SUBTRACTIONS'))) {
             my $extension = get_addon_fullname($addon);
@@ -41,7 +52,6 @@ sub run {
     # clean migration repo and configure SUSEConnect when using proxy
     if ((get_var('SCC_URL', "") =~ /proxy/)) {
         zypper_call("rr Migration");
-        assert_script_run("echo 'url: " . get_var('SCC_URL') . "' > /etc/SUSEConnect");
     }
 
     # Add product increment repo
