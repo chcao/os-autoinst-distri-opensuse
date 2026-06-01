@@ -1642,12 +1642,19 @@ Does not fail the test module but just highlights the result of the comparison.
 
 sub compare_bootparams {
     my ($expected_boot_params, $received_boot_params) = @_;
-    my @difference = arrays_subset($expected_boot_params, $received_boot_params);
+
+    # Strip any leading or trailing whitespaces from every element in both arrays
+    my @cleaned_expected = map { my $s = $_; $s =~ s/^\s+|\s+$//g; $s } @{$expected_boot_params};
+    my @cleaned_received = map { my $s = $_; $s =~ s/^\s+|\s+$//g; $s } @{$received_boot_params};
+
+    # Compare the cleaned, whitespace-free arrays
+    my @difference = arrays_subset(\@cleaned_expected, \@cleaned_received);
+
     if (scalar @difference > 0) {
         record_info("params mismatch", "Actual bootloader params do not correspond to the expected ones. Mismatched params: @difference", result => 'fail');
     }
     else {
-        record_info("params ok", "Bootloader parameters are typed correctly.\nVerified parameters:\n" . join("\n", @{$expected_boot_params}));
+        record_info("params ok", "Bootloader parameters are typed correctly.\nVerified parameters:\n" . join("\n", @cleaned_expected));
     }
 }
 
