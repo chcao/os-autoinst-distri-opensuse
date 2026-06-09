@@ -18,6 +18,9 @@ sub run {
 
     select_console('root-console');
 
+    #### debug sap migration bug
+    add_suseconnect_product(get_addon_fullname('pcm'));
+
     # Add repo for devel:DMS when using proxy
     if ((get_var('SCC_URL', "") =~ /proxy/)) {
         my $repo_server = "https://download.opensuse.org/repositories/devel:/DMS/";
@@ -37,6 +40,9 @@ sub run {
             remove_suseconnect_product($extension, (($addon eq 'nvidia') ? '15' : ()));
         }
     }
+
+    ## debug bsc#1260354
+    record_info("check release package", script_output("zypper se release"));
 
     # clean repos before migration
     if ((get_var('SCC_URL', "") =~ /proxy/)) {
