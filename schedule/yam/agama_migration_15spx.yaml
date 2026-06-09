@@ -8,6 +8,7 @@ schedule:
   - installation/bootloader_start
   - autoyast/installation
   - installation/first_boot
+  - yam/migration/register_addons
   - yam/migration/restore_upgrade_env
   - console/system_prepare
   - console/hostname
