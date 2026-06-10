@@ -51,8 +51,9 @@ sub run {
         zypper_call("ar --refresh $repo_increment Increment_repo");
     }
 
-    # list repos and check network before migration
+    # list repos, check registration status and network before migration
     record_info('list repos', script_output('zypper lr -u'));
+    record_info('registration status', script_output('SUSEConnect --status-text'));
     record_info('network', script_output('ip a s'));
     record_info('wicked', script_output('wicked ifstatus all'));
     record_info('config', script_output('for i in $(find /etc/sysconfig/network -name ifcfg*); do echo "XXXXXXXXXX $i"; cat $i; done'));
