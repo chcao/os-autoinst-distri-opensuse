@@ -21,6 +21,23 @@ sub run {
     script_run("tar czvf /tmp/udev_rules.tar.gz /etc/udev/rules.d/*", {timeout => 60});
     upload_logs("/tmp/udev_rules.tar.gz", failok => 1);
 
+    ## provide zypp log for developer
+    assert_script_run('tar -czvf /tmp/migration_debug_logs.tar.gz ' .
+                      '-C /var/log/ ' .
+                      '--ignore-failed-read ' .
+                      'YaST2 zypper.log pk_backend_zypp updateTestcase-*');
+
+    # Upload the tarball if it exists, otherwise dump /var/log contents
+    if (script_run('test -f /tmp/migration_debug_logs.tar.gz') == 0) {
+        upload_logs('/tmp/migration_debug_logs.tar.gz');
+    } else {
+        # If the tarball wasn't created, change directory to /var/log and grab the full list
+        my $log_list = script_output('cd /var/log && ls -la');
+
+        # Display the full directory listing directly inside the openQA Web UI
+        record_info('Missing Tarball', "The archive could not be found.\n\nHere is the listing of /var/log:\n\n$log_list", result => 'fail');
+    }
+
     my $fatal_errors = script_output("cat /var/log/distro_migration.log | grep -i -E \"migration failed|aborting migration\" -B50", proceed_on_failure => 1);
     if ($fatal_errors) {
         record_info("Migration failed", $fatal_errors, result => 'fail');

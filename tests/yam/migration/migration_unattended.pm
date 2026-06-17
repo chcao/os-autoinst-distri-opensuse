@@ -57,6 +57,9 @@ sub run {
     record_info('wicked', script_output('wicked ifstatus all'));
     record_info('config', script_output('for i in $(find /etc/sysconfig/network -name ifcfg*); do echo "XXXXXXXXXX $i"; cat $i; done'));
 
+    # set ZYPP_FULLLOG=1 to provide log
+    assert_script_run('export ZYPP_FULLLOG=1');
+
     # upload logs to know system state before migration
     upload_logs("/boot/grub2/grub.cfg", failok => 1);
     upload_folders(folders => '/etc/zypp/repos.d/');
