@@ -5,6 +5,7 @@ local iscsi_lib = import 'lib/iscsi.libsonnet';
 local scripts_post_lib = import 'lib/scripts_post.libsonnet';
 local scripts_post_partitioning_lib = import 'lib/scripts_post_partitioning.libsonnet';
 local scripts_pre_lib = import 'lib/scripts_pre.libsonnet';
+local scripts_verify_locale_packages_lib = import 'lib/scripts_verify_locale_packages.libsonnet';
 local software_lib = import 'lib/software.libsonnet';
 local storage_lib = import 'lib/storage.libsonnet';
 local security_lib = import 'lib/security.libsonnet';
@@ -36,6 +37,7 @@ function(access_ssh_enabled=false,
          scripts_pre='',
          scripts_post_partitioning='',
          scripts_post='',
+         scripts_verify_locale_packages=false,
          software_only_required=false,
           // Only for 16.0 needed
          ssh_public_key=false,
@@ -73,11 +75,15 @@ function(access_ssh_enabled=false,
           },
           root: base_lib.root(root_password, ssh_public_key),
           [if ssl_certificates == true then 'security']: security_lib.sslCertificates(),
-          [if scripts_pre != '' || scripts_post != '' || scripts_post_partitioning != '' then 'scripts']: {
-            [if scripts_post != '' then 'post']: [ scripts_post_lib[x] for x in std.split(scripts_post, ',') ],
+          local post_list =
+            (if scripts_post != '' then [ scripts_post_lib[x] for x in std.split(scripts_post, ',') ] else []) +
+            (if scripts_verify_locale_packages == true then scripts_verify_locale_packages_lib else []),
+
+          [if scripts_pre != '' || scripts_post != '' || scripts_post_partitioning != '' || scripts_verify_locale_packages then 'scripts']: std.prune({
+            [if std.length(post_list) > 0 then 'post']: post_list,
             [if scripts_post_partitioning != '' then 'postPartitioning']: [ scripts_post_partitioning_lib[x] for x in std.split(scripts_post_partitioning, ',') ],
             [if scripts_pre != '' then 'pre']: [ scripts_pre_lib[x] for x in std.split(scripts_pre, ',') ],
-          },
+          }),
           [if decrypt_password != '' || registration_packagehub || multipath_activate then 'questions']: {
             [if questions_policy_auto then 'policy']: 'auto',
             answers: std.prune([
