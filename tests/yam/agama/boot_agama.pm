@@ -74,6 +74,9 @@ sub prepare_boot_params {
     # additional parameters requiring parsing
     push @params, split ' ', trim(parse_dud_parameter(get_var('INST_DUD'))) if get_var('INST_DUD');
 
+    # add systemd_boot_preview systemd_boot_preview
+    push @params, 'inst.systemd_boot_preview=1' if get_var('SYSTEMD_BOOT_PREVIEW');
+
     return @params;
 }
 
