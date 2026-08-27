@@ -29,7 +29,7 @@ sub run {
 
     # install the migration image and active it
     my $migration_tool = is_s390x ? 'SLES16-Migration' : 'suse-migration-sle16-activation';
-    record_info("installing DMS", script_output("zypper --gpg-auto-import-keys -n in $migration_tool"));
+    record_info("installing DMS", script_output("zypper --gpg-auto-import-keys -n in $migration_tool", timeout => 60));
 
     # deactivate unwanted/unsupported extensions before doing migration
     if (get_var('SCC_SUBTRACTIONS')) {
