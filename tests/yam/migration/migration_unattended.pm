@@ -76,7 +76,7 @@ sub run {
         assert_script_run("sed -i 's/set timeout=[0-9]*/set timeout=-1/' /etc/grub.d/99_migration");
         assert_script_run("grub2-mkconfig -o /boot/grub2/grub.cfg");
         power_action('reboot', textmode => 1, keepconsole => 1, first_reboot => 1);
-        reconnect_mgmt_console(timeout => 600) if (is_ipmi | is_pvm),;
+        reconnect_mgmt_console(timeout => 600) if (is_ipmi);
         assert_screen('grub-menu-migration', is_ipmi ? 600 : 120);
         send_key 'ret';
         assert_screen('migration-running', 60) unless (is_pvm);
