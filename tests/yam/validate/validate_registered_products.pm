@@ -17,7 +17,7 @@ sub is_registered_and_active {
 
     return $product->{status} eq 'Registered' &&
       $product->{version} eq get_var("VERSION") &&
-      $product->{subscription_status} eq 'ACTIVE';
+      lc($product->{subscription_status} // '') eq 'active';
 }
 
 sub run {

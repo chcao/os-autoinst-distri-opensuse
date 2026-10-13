@@ -28,3 +28,5 @@ repos:
     uri: https://migration-rmt2.qe.nue2.suse.org/repo/suse/sle16/
     enabled: 'No'
     filter: name
+products:
+  - SLES
