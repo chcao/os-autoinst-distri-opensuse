@@ -4,6 +4,9 @@
   <suse_register>
     <do_registration config:type="boolean">true</do_registration>
     <reg_code>{{SCC_REGCODE}}</reg_code>
+    <reg_server>{{SCC_URL}}</reg_server>
+    <reg_server_cert_fingerprint_type>SHA1</reg_server_cert_fingerprint_type>
+    <reg_server_cert_fingerprint>34:1C:82:B1:3A:7B:E2:D5:94:01:19:12:76:8E:C6:81:9D:CA:C6:04</reg_server_cert_fingerprint>
     <install_updates config:type="boolean">true</install_updates>
   </suse_register>
   <bootloader>
